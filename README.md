@@ -91,6 +91,7 @@ Enlace para [simular](http://www.pythontutor.com/c.html#code=%23define%20NULL%20
 1. Escriba un programa simple llamado ```null.c``` que cree un puntero a un entero, llevelo a null y entonces intente desreferenciarlo (esto es, asignarle un valor). Compile este programa llamado ```null```. ¿Qué pasa cuando usted ejecuta este programa?
 
   >Nos aparece la siguiente excepción ```Segmentation fault (core dumped)```
+  >Ya que estamos accediendo a una posición de memoria que no existe o no tenemos acceso.
   ![alt text](1.png "Punto 1")
 
 2. Compile el programa del ejercicio anterior usando información de simbolos (con la flag -g). Al hacer esto se esta poniendo mas informacion en el ejecutable para permitir al debugger acceder a informacion util sobre los nombres de las variables y cosas similares. Ejecute el programa bajo el debugger digitando en consola (para el caso) ```gdb null``` y entonces una vez el ```gdb``` este corriendo ejecute ```run```. ¿Qué muestra gdb?
@@ -104,11 +105,37 @@ Enlace para [simular](http://www.pythontutor.com/c.html#code=%23define%20NULL%20
 
 3. Haga uso de la herramienta ```valgrind``` en el programa empleado en los puntos anteriores. Se usará la herramienta ```memcheck``` que es parte de ```valgrind``` para analizar lo que pasa: ```valgrind --leak-check=yes null```. ¿Qué pasa cuando corre esto?, ¿Puede usted interpretar la salida de la herramienta anterior?
 
+  >En la siguiente imagen con ayuda de valgrind podemos ver que no se esta asignando memoria y por eso al asignar el valor entero tenemos problemas.
+  ![alt text](3.png "Punto 3")
+
 4. Escriba un programa sencillo que asigne memoria usando ```malloc()``` pero olvide liberarla antes de que el programa termina. ¿Qué pasa cuando este programa se ejecuta?, ¿Puede usted usar gdb para encontrar problemas como este?, ¿Que dice acerca de Valgrind (de nuevo use este con la bandera ```--leak check=yes```)?
+
+  >Nuestro programa corre sin problema alguno
+  ![alt text](4-1.png "Punto 4.1")
+
+  >No es posible, ya que gdb no posee esta función.
+  ![alt text](4-2.png "Punto 4.2")
+
+  >Con Valgrind si es posible utilizando la bandera --leak-check=full o --leak-check=yes. Como vemos en la siguiente figura ```definitely lost: 20 bytes in 1 blocks```
+  ![alt text](4-3.png "Punto 4.3")
 
 5. Escriba un programa que cree un array de enteros llamado data de un tamaño de 100 usando ```malloc```; entonces, lleve el ```data[100]``` a ```0```. ¿Qué pasa cuando este programa se ejecuta?, ¿Qué pasa cuando se corre el programa usando ```valgrind```?, ¿El programa es correcto?
 
+  >Cuando ejecutamos el programa se ejecuta normalmente, asigna memoria y hace los cambios que necesitemos en el array.
+  ![alt text](5-1.png "Punto 5.1")
+
+  >Si usamos Valgrind podemos observar que desperdiciamos toda esa memoria.
+  ![alt text](5-2.png "Punto 5.2")
+
+  >El funcionamiento del programa es de cirta forma correcto, ya que logra terminar su ejecución si problema, pero esta perdida de memoria es mejor no dejarla en nuestro codigo. El uso de Valgrind nos ayuda a detectar estos problemas.
+
 6. Codifique un programa que asigne un array de enteros (como arriba), luego lo libere, y entonces intente imprimir el valor de un elemento del array. ¿El programa corre?, ¿Que pasa cuando hace uso de ```valgrind```?
+
+  >Si ejecutamos nuestro programa notamos que corre de forma normal, agregamos un print antes y despues de liberar la memoria; El resultado para el despues es muy interesante, ya que da un valor totalmente diferente.
+  ![alt text](6-1.png "Punto 6.1")
+
+  >Si lo hacemos con valgrind, podemos ver que nos muestra los problemas de memoria que tenemos mientras que no se haga el free, al realizar el free no hace esta advertencia. Y em ambos print el valor es 0.
+  ![alt text](6-2.png "Punto 6.2")
 
 7. Ahora pase un **funny value** para liberar (e.g. un puntero en la mitad del array que usted ha asignado) ¿Qué pasa?, ¿Ústed necesita herramientas para encontrar este tipo de problemas?
 
