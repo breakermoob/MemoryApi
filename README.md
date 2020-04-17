@@ -139,7 +139,15 @@ Enlace para [simular](http://www.pythontutor.com/c.html#code=%23define%20NULL%20
 
 7. Ahora pase un **funny value** para liberar (e.g. un puntero en la mitad del array que usted ha asignado) ¿Qué pasa?, ¿Ústed necesita herramientas para encontrar este tipo de problemas?
 
+Sucede un error al intentar liberar el puntero en la mitad del arreglo porque es un espacio de memoria que se encuentra dentro de otro bloque de memoria asignado, por lo que es necesario hacer un `realloc()` antes de poder liberar la memoria. Al parecer este error no lo detecta el compilador, pero sí se puede dar en tiempo de ejecución. No son necesarias herramientas extra para encontrarlo, pero sí son de gran ayuda para hacer un mejor debug. Por ejemplo, `valgrind` indica que se está intentando liberar 200 bytes dentro de un bloque de tamaño 400, dando una gran pista de cuál es el problema.
+![](7.png)
+
 8. Intente usar alguna de las otras interfaces para asignacion de memoria. Por ejemplo, cree una estructura de datos simple similar a un vector y que use rutinas que usen realloc para manejar el vector. Use un array para almacenar los elementos del vector; cuando un usuario agregue una entrada al vector, use realloc para asignar un espacio mas a este. ¿Que tan bien funciona el vector asi?, ¿Como se compara con una lista enlazada?, utilice ```valgrind``` para ayudarse en la busqueda de errores.
+
+El vector permite agregar y acceder a los elementos de forma correcta. El nivel de complejidad de la estructura no es muy elevado, pero sí requiere de varias acciones y variables para poder funcionar. De cierta forma, es muy parecido a una lista ligada sencilla, pues permite agregar elementos de manera dinámica y se puede acceder mediante apuntadores, la diferencia es que no se están almacenando nodos ni existen campos ligas para recorrer la estructura, dificultando inserciones al medio y cosas así. `valgrind` no muestra errores relacionados con el manejo de la memoria.
+
+![](8-1.png)
+![](8-2.png)
 
 9. Gaste mas tiempo y lea sobre el uso de gdb y valgrind. Conocer estas herramientas es critico; gaste el tiempo y aprenda como volverse un experto debugger en UNIX y C enviroment.
 
